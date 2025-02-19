@@ -1,28 +1,34 @@
 import sys
 import random
-from PyQt6 import QtWidgets, uic
+from PyQt6 import QtWidgets
 from PyQt6.QtGui import QPainter, QColor
-from PyQt6.QtCore import Qt
+from ui_form import Ui_MainWindow
 
 
-class MyWidget(QtWidgets.QMainWindow):
+class MyWidget(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.setupUi(self)  # Загружаем интерфейс из ui_form.py
         self.pushButton.clicked.connect(self.paint_circle)
         self.should_paint = False
 
     def paint_circle(self):
         self.should_paint = True
-        self.update()
+        self.update()  # Перерисовываем окно
 
     def paintEvent(self, event):
         if self.should_paint:
             painter = QPainter(self)
-            painter.setBrush(QColor("yellow"))
+
+            # Случайный цвет
+            color = QColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            painter.setBrush(color)
+
+            # Случайный размер и позиция окружности
             diameter = random.randint(30, 150)
             x = random.randint(50, self.width() - diameter - 50)
             y = random.randint(100, self.height() - diameter - 50)
+
             painter.drawEllipse(x, y, diameter, diameter)
             self.should_paint = False
 
